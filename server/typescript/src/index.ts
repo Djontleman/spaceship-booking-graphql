@@ -1,15 +1,19 @@
-import { ApolloServer, gql } from 'apollo-server';
+import "reflect-metadata";
+import { ApolloServer } from 'apollo-server';
+import { Arg, Query, Resolver, ObjectType, Field, buildSchema } from 'type-graphql';
 
-async function startApolloServer(typeDefs, resolvers) {
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-  });
+// || ========== Bootstrap Server Function ========== ||
+
+async function bootstrap(resolvers) {
+  const schema = await buildSchema({ resolvers });
+
+  const server = new ApolloServer({ schema });
+
   const { url } = await server.listen();
   console.log(`🚀 Server ready at ${url}`);  
 }
 
-
+// || ========== In-Memory Database ========== ||
 
 const spaceshipGenerics = [
   {
@@ -26,31 +30,41 @@ const spaceshipGenerics = [
   }
 ]
 
-const typeDefs = gql`
-  type SpaceshipGeneric {
-    id: Int
-    brand: String
-    model: String
-    capacity: Int
+// || ========== Schema and Resolvers (Type-GraphQL) ========== ||
+
+@ObjectType()
+class SpaceshipGeneric {
+  @Field()
+  id: number;
+
+  @Field()
+  brand: string;
+
+  @Field()
+  model: string;
+
+  @Field()
+  capacity: number;
+} 
+
+@Resolver()
+class SpaceshipGenericResolver {
+  constructor() {};
+
+  @Query(() => [SpaceshipGeneric])
+  spaceshipGenerics() {
+    return spaceshipGenerics;
   }
 
-  type Query {
-    spaceshipGenerics: [SpaceshipGeneric]
-    spaceshipGeneric(id: Int): SpaceshipGeneric
+  @Query(() => SpaceshipGeneric)
+  spaceshipGeneric(@Arg("id") id: number) {
+    return spaceshipGenerics.find(spaceshipGeneric => spaceshipGeneric.id === id);
   }
-`;
-
-const resolvers = {
-  Query: {
-    spaceshipGenerics: () => {
-      return spaceshipGenerics;
-    },
-    spaceshipGeneric: (_, { id }) => {
-      return spaceshipGenerics.find(spaceshipGeneric => spaceshipGeneric.id === id);
-    },
-  }
-  
 }
 
+const resolvers = [SpaceshipGenericResolver] as const;
 
-startApolloServer(typeDefs, resolvers);
+
+// || ========== Start Server ========== ||
+
+bootstrap(resolvers);
