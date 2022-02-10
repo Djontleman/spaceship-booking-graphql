@@ -1,45 +1,53 @@
 import "reflect-metadata";
-import { ApolloServer } from 'apollo-server';
+import { connect, Schema, Types, model } from 'mongoose';
 import { 
   buildSchema, 
-  ObjectType, Field, InputType,
+  ObjectType, Field, InputType, ID,
   Resolver, Query, Mutation, Arg
 } from 'type-graphql';
+import { ApolloServer } from 'apollo-server';
 
 // || ========== Bootstrap Server Function ========== ||
 
 async function bootstrap(resolvers) {
+  // connect to MongoDb database
+  await connect('mongodb://localhost/spaceshipBookingDB')
+    .catch(err => console.log(err));
+
+  // build schema using resolvers
   const schema = await buildSchema({ resolvers });
 
+  // build Apollo server
   const server = new ApolloServer({ schema });
 
+  // listen on port
   const { url } = await server.listen();
   console.log(`🚀 Server ready at ${url}`);  
 }
 
-// || ========== In-Memory Database ========== ||
+// || ========== MongoDB Models ========== ||
 
-const spaceshipGenericDataBase = [
-  {
-    id: 1,
-    brand: 'SpaceX',
-    model: 'Falcon 9',
-    capacity: 5,
-  },
-  {
-    id: 2,
-    brand: 'SpaceX',
-    model: 'Falcon Heavy',
-    capacity: 8,
-  }
-]
+interface spaceshipGeneric {
+  brand: string;
+  model: string;
+  capacity: number;
+}
+
+const spaceshipGenericSchema = new Schema<spaceshipGeneric>({
+  brand: { type: String },
+  model: { type: String },
+  capacity: { type: Number },
+})
+
+const SpaceshipGenericModel = model<spaceshipGeneric>('spaceship_generics', spaceshipGenericSchema);
+
 
 // || ========== Schema and Resolvers (Type-GraphQL) ========== ||
 
 @ObjectType()
 class SpaceshipGeneric {
-  @Field()
-  id: number;
+  @Field(type => ID)
+  id: string;
 
   @Field()
   brand: string;
@@ -68,52 +76,42 @@ class SpaceshipGenericResolver {
   constructor() {};
 
   @Query(() => [SpaceshipGeneric])
-  spaceshipGenerics() {
-    return spaceshipGenericDataBase;
+  async spaceshipGenerics() {
+    return SpaceshipGenericModel.find({});
   }
 
   @Query(() => SpaceshipGeneric)
-  spaceshipGeneric(@Arg("id") id: number) {
-    return spaceshipGenericDataBase.find(spaceshipGeneric => spaceshipGeneric.id === id);
+  async spaceshipGeneric(@Arg("id") id: string) {
+    return SpaceshipGenericModel.findById(id);
   }
 
   @Mutation(() => SpaceshipGeneric)
-  addSpaceshipGeneric(@Arg("input") input: SpaceshipGenericInput) {
-    const id = spaceshipGenericDataBase.length + 1;
-    
-    const newSpaceshipGeneric = {
-      id: id,
+  async addSpaceshipGeneric(@Arg("input") input: SpaceshipGenericInput) {
+    const newSpaceshipGeneric = new SpaceshipGenericModel({
       brand: input.brand,
       model: input.model,
       capacity: input.capacity,
-    }
+    });
 
-    spaceshipGenericDataBase.push(newSpaceshipGeneric);
-    return spaceshipGenericDataBase[id - 1];
+    newSpaceshipGeneric.id = newSpaceshipGeneric._id;
+
+    await newSpaceshipGeneric.save();
+    return SpaceshipGenericModel.findById(newSpaceshipGeneric.id);
   }
 
   @Mutation(() => SpaceshipGeneric)
-  updateSpaceshipGeneric(
-    @Arg("id") id: number,
+  async updateSpaceshipGeneric(
+    @Arg("id") id: string,
     @Arg("input") input: SpaceshipGenericInput
   ) {
-    const updatedSpaceshipGeneric = {
-      id: id,
-      brand: input.brand,
-      model: input.model,
-      capacity: input.capacity,
-    }
-
-    spaceshipGenericDataBase[id - 1] = updatedSpaceshipGeneric;
-    return spaceshipGenericDataBase[id - 1];
+    return SpaceshipGenericModel.findByIdAndUpdate(id, input, { new: true });
   }
 
-  // * works but not in use due to current ID implementation
-  // @Mutation(() => String)
-  // deleteSpaceshipGeneric(@Arg("id") id: number) {
-  //   spaceshipGenericDataBase.splice(id - 1, 1);
-  //   return `SpaceshipGeneric with ID: ${id} was deleted`;
-  // }
+  @Mutation(() => String)
+  async deleteSpaceshipGeneric(@Arg("id") id: string) {
+    await SpaceshipGenericModel.findOneAndDelete({ _id: id });
+    return `SpaceshipGeneric with ID: ${id} was deleted`;
+  }
 }
 
 const resolvers = [SpaceshipGenericResolver] as const;
