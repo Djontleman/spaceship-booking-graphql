@@ -1,6 +1,10 @@
 import "reflect-metadata";
 import { ApolloServer } from 'apollo-server';
-import { Arg, Query, Resolver, ObjectType, Field, buildSchema } from 'type-graphql';
+import { 
+  buildSchema, 
+  ObjectType, Field, InputType,
+  Resolver, Query, Mutation, Arg
+} from 'type-graphql';
 
 // || ========== Bootstrap Server Function ========== ||
 
@@ -15,7 +19,7 @@ async function bootstrap(resolvers) {
 
 // || ========== In-Memory Database ========== ||
 
-const spaceshipGenerics = [
+const spaceshipGenericDataBase = [
   {
     id: 1,
     brand: 'SpaceX',
@@ -47,19 +51,69 @@ class SpaceshipGeneric {
   capacity: number;
 } 
 
+@InputType()
+class SpaceshipGenericInput {
+  @Field()
+  brand: string;
+
+  @Field()
+  model: string;
+
+  @Field()
+  capacity: number;
+}
+
 @Resolver()
 class SpaceshipGenericResolver {
   constructor() {};
 
   @Query(() => [SpaceshipGeneric])
   spaceshipGenerics() {
-    return spaceshipGenerics;
+    return spaceshipGenericDataBase;
   }
 
   @Query(() => SpaceshipGeneric)
   spaceshipGeneric(@Arg("id") id: number) {
-    return spaceshipGenerics.find(spaceshipGeneric => spaceshipGeneric.id === id);
+    return spaceshipGenericDataBase.find(spaceshipGeneric => spaceshipGeneric.id === id);
   }
+
+  @Mutation(() => SpaceshipGeneric)
+  addSpaceshipGeneric(@Arg("input") input: SpaceshipGenericInput) {
+    const id = spaceshipGenericDataBase.length + 1;
+    
+    const newSpaceshipGeneric = {
+      id: id,
+      brand: input.brand,
+      model: input.model,
+      capacity: input.capacity,
+    }
+
+    spaceshipGenericDataBase.push(newSpaceshipGeneric);
+    return spaceshipGenericDataBase[id - 1];
+  }
+
+  @Mutation(() => SpaceshipGeneric)
+  updateSpaceshipGeneric(
+    @Arg("id") id: number,
+    @Arg("input") input: SpaceshipGenericInput
+  ) {
+    const updatedSpaceshipGeneric = {
+      id: id,
+      brand: input.brand,
+      model: input.model,
+      capacity: input.capacity,
+    }
+
+    spaceshipGenericDataBase[id - 1] = updatedSpaceshipGeneric;
+    return spaceshipGenericDataBase[id - 1];
+  }
+
+  // * works but not in use due to current ID implementation
+  // @Mutation(() => String)
+  // deleteSpaceshipGeneric(@Arg("id") id: number) {
+  //   spaceshipGenericDataBase.splice(id - 1, 1);
+  //   return `SpaceshipGeneric with ID: ${id} was deleted`;
+  // }
 }
 
 const resolvers = [SpaceshipGenericResolver] as const;
