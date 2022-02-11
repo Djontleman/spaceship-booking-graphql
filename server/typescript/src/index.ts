@@ -27,94 +27,94 @@ async function bootstrap(resolvers) {
 
 // || ========== MongoDB Models ========== ||
 
-interface spaceshipGeneric {
-  brand: string;
-  model: string;
+interface ISpaceshipModel {
+  make: string;
+  name: string;
   capacity: number;
 }
 
-const spaceshipGenericSchema = new Schema<spaceshipGeneric>({
-  brand: { type: String },
-  model: { type: String },
+const spaceshipModelSchema = new Schema<ISpaceshipModel>({
+  make: { type: String },
+  name: { type: String },
   capacity: { type: Number },
 })
 
-const SpaceshipGenericModel = model<spaceshipGeneric>('spaceship_generics', spaceshipGenericSchema);
+const SpaceshipModels = model<ISpaceshipModel>('spaceship_models', spaceshipModelSchema);
 
 
 // || ========== Schema and Resolvers (Type-GraphQL) ========== ||
 
 @ObjectType()
-class SpaceshipGeneric {
+class SpaceshipModel {
   @Field(type => ID)
   id: string;
 
   @Field()
-  brand: string;
+  make: string;
 
   @Field()
-  model: string;
+  name: string;
 
   @Field()
   capacity: number;
 } 
 
 @InputType()
-class SpaceshipGenericInput {
+class SpaceshipModelInput {
   @Field()
-  brand: string;
+  make: string;
 
   @Field()
-  model: string;
+  name: string;
 
   @Field()
   capacity: number;
 }
 
 @Resolver()
-class SpaceshipGenericResolver {
+class SpaceshipModelResolver {
   constructor() {};
 
-  @Query(() => [SpaceshipGeneric])
-  async spaceshipGenerics() {
-    return SpaceshipGenericModel.find({});
+  @Query(() => [SpaceshipModel])
+  async allSpaceshipModels() {
+    return SpaceshipModels.find({});
   }
 
-  @Query(() => SpaceshipGeneric)
-  async spaceshipGeneric(@Arg("id") id: string) {
-    return SpaceshipGenericModel.findById(id);
+  @Query(() => SpaceshipModel)
+  async spaceshipModel(@Arg("id") id: string) {
+    return SpaceshipModels.findById(id);
   }
 
-  @Mutation(() => SpaceshipGeneric)
-  async addSpaceshipGeneric(@Arg("input") input: SpaceshipGenericInput) {
-    const newSpaceshipGeneric = new SpaceshipGenericModel({
-      brand: input.brand,
-      model: input.model,
+  @Mutation(() => SpaceshipModel)
+  async addSpaceshipModel(@Arg("input") input: SpaceshipModelInput) {
+    const newSpaceshipModel = new SpaceshipModels({
+      make: input.make,
+      name: input.name,
       capacity: input.capacity,
     });
 
-    newSpaceshipGeneric.id = newSpaceshipGeneric._id;
+    newSpaceshipModel.id = newSpaceshipModel._id;
 
-    await newSpaceshipGeneric.save();
-    return SpaceshipGenericModel.findById(newSpaceshipGeneric.id);
+    await newSpaceshipModel.save();
+    return SpaceshipModels.findById(newSpaceshipModel.id);
   }
 
-  @Mutation(() => SpaceshipGeneric)
-  async updateSpaceshipGeneric(
+  @Mutation(() => SpaceshipModel)
+  async updateSpaceshipModel(
     @Arg("id") id: string,
-    @Arg("input") input: SpaceshipGenericInput
+    @Arg("input") input: SpaceshipModelInput
   ) {
-    return SpaceshipGenericModel.findByIdAndUpdate(id, input, { new: true });
+    return SpaceshipModels.findByIdAndUpdate(id, input, { new: true });
   }
 
   @Mutation(() => String)
-  async deleteSpaceshipGeneric(@Arg("id") id: string) {
-    await SpaceshipGenericModel.findOneAndDelete({ _id: id });
-    return `SpaceshipGeneric with ID: ${id} was deleted`;
+  async deleteSpaceshipModel(@Arg("id") id: string) {
+    await SpaceshipModels.findOneAndDelete({ _id: id });
+    return `Spaceship Model with ID: ${id} was deleted`;
   }
 }
 
-const resolvers = [SpaceshipGenericResolver] as const;
+const resolvers = [SpaceshipModelResolver] as const;
 
 
 // || ========== Start Server ========== ||
