@@ -1,7 +1,7 @@
-import { prop, getModelForClass } from "@typegoose/typegoose";
+import { prop, Ref } from "@typegoose/typegoose";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
 
-import { SpaceshipModel } from "./spaceshipModel.schema";
+import { SpaceshipModel, SpaceshipModelInput } from "./spaceshipModel.schema";
 
 // || ========== Schema Type ========== ||
 
@@ -14,9 +14,9 @@ export class Spaceship {
   @prop()
   callSign: string;
 
-  @Field(type => ID)
+  @Field(type => SpaceshipModel)
   @prop({ ref: () => SpaceshipModel })
-  model: string;
+  model: Ref<SpaceshipModel>;
 }
 
 // || ========== Input Types ========== ||
@@ -27,8 +27,5 @@ export class SpaceshipInput implements Partial<Spaceship>{
   callSign: string;
 
   @Field(type => ID)
-  model: string;
+  model: Ref<SpaceshipModel>;
 }
-
-// construct model with typegoose
-export const Spaceships = getModelForClass(Spaceship); 

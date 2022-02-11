@@ -1,12 +1,13 @@
-import { Spaceships, SpaceshipInput } from '../schema/spaceship.schema';
+import { Spaceships } from '../schema';
+import { SpaceshipInput } from '../schema/spaceship.schema';
 
 export default class SpaceshipService {
   async findAll() {
-    return Spaceships.find({});
+    return Spaceships.find({}).populate({ path: 'model' });
   }
 
   async findById(id: string) {
-    return Spaceships.findById(id);
+    return Spaceships.findById(id).populate({ path: 'model'});
   }
 
   async addSpaceship(input: SpaceshipInput) {

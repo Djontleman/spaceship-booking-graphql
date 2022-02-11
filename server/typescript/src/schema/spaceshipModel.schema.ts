@@ -1,5 +1,7 @@
-import { prop, getModelForClass } from "@typegoose/typegoose";
+import { prop, Ref } from "@typegoose/typegoose";
 import { ObjectType, Field, ID, Int, InputType } from "type-graphql";
+
+import { Spaceship, SpaceshipInput } from "./spaceship.schema";
 
 // || ========== Schema Type ========== ||
 
@@ -19,6 +21,10 @@ export class SpaceshipModel {
   @Field(type => Int) // tell graphQL specifically Int
   @prop()
   capacity: number;
+
+  @Field(type => [Spaceship])
+  @prop({ ref: () => Spaceship})
+  spaceships: Ref<Spaceship>[];
 }
 
 // || ========== Input Types ========== ||
@@ -33,7 +39,7 @@ export class SpaceshipModelInput implements Partial<SpaceshipModel>{
 
   @Field(type => Int)
   capacity: number;
-}
 
-// construct model with typegoose
-export const SpaceshipModels = getModelForClass(SpaceshipModel); 
+  @Field(type => ID, { nullable: true })
+  spaceships: Ref<Spaceship>[];
+}
