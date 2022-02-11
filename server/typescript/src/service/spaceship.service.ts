@@ -1,5 +1,5 @@
-import { Spaceships } from '../schema';
-import { SpaceshipInput } from '../schema/spaceship.schema';
+import { SpaceshipModels, Spaceships } from '../schema';
+import { SpaceshipInput, UpdateSpaceshipInput } from '../schema/spaceship.schema';
 
 export default class SpaceshipService {
   async findAll() {
@@ -18,17 +18,28 @@ export default class SpaceshipService {
 
     newSpaceship.id = newSpaceship._id;
 
-    await newSpaceship.save();
-    return Spaceships.findById(newSpaceship.id);
+    await Promise.all([
+      newSpaceship.save(),
+      SpaceshipModels.findByIdAndUpdate(newSpaceship.model, { "$push": {"spaceships": { _id: newSpaceship.id }}}),
+    ]);
+
+    return Spaceships.findById(newSpaceship.id).populate({ path: 'model' });
   }
 
-  async updateSpaceship(id: string, input: SpaceshipInput) {
+  async updateSpaceship(id: string, input: UpdateSpaceshipInput) {
+    // * doesn't allow to update model
     const updatedSpaceship = Spaceships.findByIdAndUpdate(id, input, { new: true });
-    return updatedSpaceship;
+    return Spaceships.findById(id).populate({ path: 'model' });
   }
 
   async deleteSpaceship(id: string) {
-    await Spaceships.findOneAndDelete({ _id: id });
+    const spaceship = await Spaceships.findById(id);
+
+    await Promise.all([
+      Spaceships.findOneAndDelete({ _id: id }),
+      SpaceshipModels.findByIdAndUpdate(spaceship.model, { "$pull": { "spaceships": id }}),
+    ]);
+
     return `Spaceship with ID: ${id} was deleted`;
   }
 }

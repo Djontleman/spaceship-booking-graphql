@@ -29,7 +29,10 @@ export default class SpaceshipModelService {
   }
 
   async deleteModel(id: string) {
-    await SpaceshipModels.findOneAndDelete({ _id: id });
+    const model = await SpaceshipModels.findById(id);
+    if (model.spaceships.length != 0) return `Spaceship Model with ID: ${id} is still assigned to spaceships`;
+
+    await SpaceshipModels.findByIdAndDelete(id);
     return `Spaceship Model with ID: ${id} was deleted`;
   }
 }

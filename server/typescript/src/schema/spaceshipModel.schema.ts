@@ -40,6 +40,7 @@ export class SpaceshipModelInput implements Partial<SpaceshipModel>{
   @Field(type => Int)
   capacity: number;
 
-  @Field(type => ID, { nullable: true })
-  spaceships: Ref<Spaceship>[];
+  // * cannot update spaceships with this input
+//   @Field(type => ID, { nullable: true })
+//   spaceships: Ref<Spaceship>[];
 }
