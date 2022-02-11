@@ -20,11 +20,12 @@ export default class SpaceshipModelService {
     newSpaceshipModel.id = newSpaceshipModel._id;
 
     await newSpaceshipModel.save();
-    return SpaceshipModels.findById(newSpaceshipModel.id);
+    return SpaceshipModels.findById(newSpaceshipModel.id).populate({ path: 'spaceships' });
   }
 
+  // todo: update this mutation
   async updateModel(id: string, input: SpaceshipModelInput) {
-    const updatedModel = SpaceshipModels.findByIdAndUpdate(id, input, { new: true });
+    const updatedModel = await SpaceshipModels.findByIdAndUpdate(id, input, { new: true });
     return updatedModel;
   }
 

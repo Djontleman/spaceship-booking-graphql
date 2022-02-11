@@ -28,7 +28,7 @@ export default class SpaceshipService {
 
   async updateSpaceship(id: string, input: UpdateSpaceshipInput) {
     // * doesn't allow to update model
-    const updatedSpaceship = Spaceships.findByIdAndUpdate(id, input, { new: true });
+    const updatedSpaceship = await Spaceships.findByIdAndUpdate(id, input, { new: true });
     return Spaceships.findById(id).populate({ path: 'model' });
   }
 
@@ -36,7 +36,7 @@ export default class SpaceshipService {
     const spaceship = await Spaceships.findById(id);
 
     await Promise.all([
-      Spaceships.findOneAndDelete({ _id: id }),
+      Spaceships.findByIdAndDelete(id),
       SpaceshipModels.findByIdAndUpdate(spaceship.model, { "$pull": { "spaceships": id }}),
     ]);
 

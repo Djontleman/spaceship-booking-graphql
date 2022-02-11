@@ -3,11 +3,11 @@ import { JourneyInput } from '../schema/journey.schema';
 
 export default class JourneyService {
   async findAll() {
-    return Journeys.find({});
+    return Journeys.find({}).populate({ path: 'flights' });
   }
 
   async findById(id: string) {
-    return Journeys.findById(id);
+    return Journeys.findById(id).populate({ path: 'flights' });
   }
 
   async addJourney(input: JourneyInput) {
@@ -22,13 +22,15 @@ export default class JourneyService {
     return Journeys.findById(newJourney.id);
   }
 
+  // * cannot alter flights with this
   async updateJourney(id: string, input: JourneyInput) {
-    const updatedJourney = Journeys.findByIdAndUpdate(id, input, { new: true });
-    return updatedJourney;
+    await Journeys.findByIdAndUpdate(id, input, { new: true });
+    return Journeys.findById(id).populate({ path: 'flights' });
   }
 
   async deleteJourney(id: string) {
-    const model = await Journeys.findById(id);
+    const journey = await Journeys.findById(id);
+    if (journey.flights.length != 0) return `Journey with ID: ${id} is still assigned to flights`;
 
     await Journeys.findByIdAndDelete(id);
     return `Journey with ID: ${id} was deleted`;
