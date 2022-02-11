@@ -3,8 +3,6 @@ import { Resolver, Query, Mutation, Arg } from 'type-graphql';
 import { SpaceshipModel, SpaceshipModelInput } from '../schema/spaceshipModel.schema';
 import SpaceshipModelService from '../service/spaceshipModel.service';
 
-// || ========== Resolvers ========== ||
-
 @Resolver() // type-graphql resolver
 export default class SpaceshipModelResolver {
   constructor(private service: SpaceshipModelService) {
