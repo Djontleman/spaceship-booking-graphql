@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { connect, Schema, Types, model } from 'mongoose';
+import { prop, getModelForClass } from "@typegoose/typegoose";
 import { 
   buildSchema, 
   ObjectType, Field, InputType, ID,
@@ -25,24 +26,7 @@ async function bootstrap(resolvers) {
   console.log(`🚀 Server ready at ${url}`);  
 }
 
-// || ========== MongoDB Models ========== ||
-
-interface ISpaceshipModel {
-  make: string;
-  name: string;
-  capacity: number;
-}
-
-const spaceshipModelSchema = new Schema<ISpaceshipModel>({
-  make: { type: String },
-  name: { type: String },
-  capacity: { type: Number },
-})
-
-const SpaceshipModels = model<ISpaceshipModel>('spaceship_models', spaceshipModelSchema);
-
-
-// || ========== Schema and Resolvers (Type-GraphQL) ========== ||
+// || ========== Schema and Resolvers ========== ||
 
 @ObjectType()
 class SpaceshipModel {
@@ -50,14 +34,19 @@ class SpaceshipModel {
   id: string;
 
   @Field()
+  @prop()
   make: string;
 
   @Field()
+  @prop()
   name: string;
 
   @Field()
+  @prop()
   capacity: number;
 } 
+
+const SpaceshipModels = getModelForClass(SpaceshipModel);
 
 @InputType()
 class SpaceshipModelInput {
