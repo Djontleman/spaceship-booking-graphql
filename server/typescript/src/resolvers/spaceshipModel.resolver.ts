@@ -1,35 +1,29 @@
 import { Resolver, Query, Mutation, Arg } from 'type-graphql';
 
-import { SpaceshipModel, SpaceshipModels, SpaceshipModelInput } from '../schema/spaceshipModel.schema';
+import { SpaceshipModel, SpaceshipModelInput } from '../schema/spaceshipModel.schema';
+import SpaceshipModelService from '../service/spaceshipModel.service';
 
 // || ========== Resolvers ========== ||
 
 @Resolver() // type-graphql resolver
 export default class SpaceshipModelResolver {
-  constructor() {}; // takes in service class
+  constructor(private service: SpaceshipModelService) {
+    this.service = new SpaceshipModelService();
+  }; 
 
   @Query(() => [SpaceshipModel])
   async allSpaceshipModels() {
-    return SpaceshipModels.find({});
+    return this.service.findAll();
   }
 
   @Query(() => SpaceshipModel)
   async spaceshipModel(@Arg("id") id: string) {
-    return SpaceshipModels.findById(id);
+    return this.service.findById(id);
   }
 
   @Mutation(() => SpaceshipModel)
   async addSpaceshipModel(@Arg("input") input: SpaceshipModelInput) {
-    const newSpaceshipModel = new SpaceshipModels({
-      make: input.make,
-      name: input.name,
-      capacity: input.capacity,
-    });
-
-    newSpaceshipModel.id = newSpaceshipModel._id;
-
-    await newSpaceshipModel.save();
-    return SpaceshipModels.findById(newSpaceshipModel.id);
+    return this.service.addModel(input);
   }
 
   @Mutation(() => SpaceshipModel)
@@ -37,12 +31,11 @@ export default class SpaceshipModelResolver {
     @Arg("id") id: string,
     @Arg("input") input: SpaceshipModelInput
   ) {
-    return SpaceshipModels.findByIdAndUpdate(id, input, { new: true });
+    return this.service.updateModel(id, input);
   }
 
   @Mutation(() => String)
   async deleteSpaceshipModel(@Arg("id") id: string) {
-    await SpaceshipModels.findOneAndDelete({ _id: id });
-    return `Spaceship Model with ID: ${id} was deleted`;
+    return this.service.deleteModel(id);
   }
 }
