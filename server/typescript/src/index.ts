@@ -3,7 +3,7 @@ import { connect, Schema, Types, model } from 'mongoose';
 import { prop, getModelForClass } from "@typegoose/typegoose";
 import { 
   buildSchema, 
-  ObjectType, Field, InputType, ID,
+  ObjectType, Field, InputType, ID, Int,
   Resolver, Query, Mutation, Arg
 } from 'type-graphql';
 import { ApolloServer } from 'apollo-server';
@@ -28,41 +28,42 @@ async function bootstrap(resolvers) {
 
 // || ========== Schema and Resolvers ========== ||
 
-@ObjectType()
+@ObjectType() // type-graphQL type
 class SpaceshipModel {
   @Field(type => ID)
   id: string;
 
-  @Field()
-  @prop()
+  @Field() // type-graphQL property
+  @prop() // typegoose property
   make: string;
 
   @Field()
   @prop()
   name: string;
 
-  @Field()
+  @Field(type => Int) // tell graphQL specifically Int
   @prop()
   capacity: number;
 } 
 
-const SpaceshipModels = getModelForClass(SpaceshipModel);
+// construct model with typegoose
+const SpaceshipModels = getModelForClass(SpaceshipModel); 
 
-@InputType()
-class SpaceshipModelInput {
+@InputType() // type-graphql input
+class SpaceshipModelInput implements Partial<SpaceshipModel>{
   @Field()
   make: string;
 
   @Field()
   name: string;
 
-  @Field()
+  @Field(type => Int)
   capacity: number;
 }
 
-@Resolver()
+@Resolver() // type-graphql resolver
 class SpaceshipModelResolver {
-  constructor() {};
+  constructor() {}; // takes in service class
 
   @Query(() => [SpaceshipModel])
   async allSpaceshipModels() {
