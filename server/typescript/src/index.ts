@@ -1,12 +1,9 @@
 import "reflect-metadata";
-import { connect, Schema, Types, model } from 'mongoose';
-import { prop, getModelForClass } from "@typegoose/typegoose";
-import { 
-  buildSchema, 
-  ObjectType, Field, InputType, ID, Int,
-  Resolver, Query, Mutation, Arg
-} from 'type-graphql';
+import { connect } from 'mongoose';
+import { buildSchema, Resolver, Query, Mutation, Arg } from 'type-graphql';
 import { ApolloServer } from 'apollo-server';
+
+import { SpaceshipModel, SpaceshipModels, SpaceshipModelInput } from './schema/spaceshipModel.schema';
 
 // || ========== Bootstrap Server Function ========== ||
 
@@ -26,40 +23,7 @@ async function bootstrap(resolvers) {
   console.log(`🚀 Server ready at ${url}`);  
 }
 
-// || ========== Schema and Resolvers ========== ||
-
-@ObjectType() // type-graphQL type
-class SpaceshipModel {
-  @Field(type => ID)
-  id: string;
-
-  @Field() // type-graphQL property
-  @prop() // typegoose property
-  make: string;
-
-  @Field()
-  @prop()
-  name: string;
-
-  @Field(type => Int) // tell graphQL specifically Int
-  @prop()
-  capacity: number;
-} 
-
-// construct model with typegoose
-const SpaceshipModels = getModelForClass(SpaceshipModel); 
-
-@InputType() // type-graphql input
-class SpaceshipModelInput implements Partial<SpaceshipModel>{
-  @Field()
-  make: string;
-
-  @Field()
-  name: string;
-
-  @Field(type => Int)
-  capacity: number;
-}
+// || ========== Resolvers ========== ||
 
 @Resolver() // type-graphql resolver
 class SpaceshipModelResolver {
