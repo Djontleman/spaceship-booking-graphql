@@ -3,28 +3,28 @@ import { Resolver, Query, Mutation, Arg } from 'type-graphql';
 import { SpaceshipModel, SpaceshipModelInput } from '../schema/spaceshipModel.schema';
 import SpaceshipModelService from '../service/spaceshipModel.service';
 
-@Resolver() // type-graphql resolver
+@Resolver(of => SpaceshipModel) // type-graphql resolver
 export default class SpaceshipModelResolver {
   constructor(private service: SpaceshipModelService) {
     this.service = new SpaceshipModelService();
   }; 
 
-  @Query(() => [SpaceshipModel])
+  @Query(returns => [SpaceshipModel])
   async allSpaceshipModels() {
     return this.service.findAll();
   }
 
-  @Query(() => SpaceshipModel)
+  @Query(returns => SpaceshipModel)
   async spaceshipModel(@Arg("id") id: string) {
     return this.service.findById(id);
   }
 
-  @Mutation(() => SpaceshipModel)
+  @Mutation(returns => SpaceshipModel)
   async addSpaceshipModel(@Arg("input") input: SpaceshipModelInput) {
     return this.service.addModel(input);
   }
 
-  @Mutation(() => SpaceshipModel)
+  @Mutation(returns => SpaceshipModel)
   async updateSpaceshipModel(
     @Arg("id") id: string,
     @Arg("input") input: SpaceshipModelInput
@@ -32,7 +32,7 @@ export default class SpaceshipModelResolver {
     return this.service.updateModel(id, input);
   }
 
-  @Mutation(() => String)
+  @Mutation(returns => String)
   async deleteSpaceshipModel(@Arg("id") id: string) {
     return this.service.deleteModel(id);
   }

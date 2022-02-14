@@ -1,4 +1,4 @@
-import { prop, Ref } from "@typegoose/typegoose";
+import { prop as Property, Ref } from "@typegoose/typegoose";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
 
 import { Flight } from "./flight.schema";
@@ -11,15 +11,15 @@ export class Journey {
   id: string;
 
   @Field() 
-  @prop()
+  @Property()
   origin: string;
 
   @Field()
-  @prop()
+  @Property()
   destination: string;
 
   @Field(type => [Flight])
-  @prop({ ref: () => Flight })
+  @Property({ ref: () => Flight })
   flights: Ref<Flight>[];
 }
 
@@ -31,5 +31,5 @@ export class JourneyInput implements Partial<Journey> {
   origin: string;
 
   @Field()
-  destination?: string;
+  destination: string;
 }

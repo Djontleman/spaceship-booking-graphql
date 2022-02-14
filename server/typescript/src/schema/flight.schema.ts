@@ -1,5 +1,4 @@
-import { prop, Ref } from "@typegoose/typegoose";
-import { Types } from "mongoose";
+import { prop as Property, Ref } from "@typegoose/typegoose";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
 
 import { Journey } from "./journey.schema";
@@ -13,7 +12,7 @@ export class Flight {
   id: string;
 
   @Field(type => Journey) 
-  @prop({ ref: () => Journey })
+  @Property({ ref: () => Journey })
   journey: Ref<Journey>
 
   // * not implemented yet
@@ -22,7 +21,7 @@ export class Flight {
   // spaceship: Ref<Spaceship>;
 
   @Field()
-  @prop()
+  @Property()
   price: number;
 }
 
@@ -31,14 +30,14 @@ export class Flight {
 @InputType() // type-graphql input
 export class FlightInput implements Partial<Flight> {
   @Field(type => ID)
-  journey?: Ref<Journey, Types.ObjectId>; // ? need Types? need ?
+  journey: Ref<Journey>; // ? need Types? need ?
 
   // * not implemented yet
   // @Field(type => ID)
-  // spaceship?: Ref<Spaceship, Types.ObjectId>;
+  // spaceship: Ref<Spaceship>;
 
   @Field()
-  price?: number;
+  price: number;
 }
 
 @InputType()

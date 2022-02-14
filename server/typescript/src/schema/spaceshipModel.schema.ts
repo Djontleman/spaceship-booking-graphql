@@ -1,4 +1,4 @@
-import { prop, Ref } from "@typegoose/typegoose";
+import { prop as Property, Ref } from "@typegoose/typegoose";
 import { ObjectType, Field, ID, Int, InputType } from "type-graphql";
 
 import { Spaceship, SpaceshipInput } from "./spaceship.schema";
@@ -11,19 +11,19 @@ export class SpaceshipModel {
   id: string;
 
   @Field() // type-graphQL property
-  @prop() // typegoose property
+  @Property() // typegoose property
   make: string;
 
   @Field()
-  @prop()
+  @Property()
   name: string;
 
   @Field(type => Int) // tell graphQL specifically Int
-  @prop()
+  @Property()
   capacity: number;
 
   @Field(type => [Spaceship])
-  @prop({ ref: () => Spaceship})
+  @Property({ ref: () => Spaceship})
   spaceships: Ref<Spaceship>[];
 }
 

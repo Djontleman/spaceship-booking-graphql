@@ -3,28 +3,28 @@ import { Resolver, Query, Mutation, Arg } from 'type-graphql';
 import { Journey, JourneyInput } from '../schema/journey.schema';
 import JourneyService from '../service/journey.service';
 
-@Resolver() 
+@Resolver(of => Journey) 
 export default class JourneyResolver {
   constructor(private service: JourneyService) {
     this.service = new JourneyService();
   }; 
 
-  @Query(() => [Journey])
+  @Query(returns => [Journey])
   async allJourneys() {
     return this.service.findAll();
   }
 
-  @Query(() => Journey)
+  @Query(returns => Journey)
   async journey(@Arg("id") id: string) {
     return this.service.findById(id);
   }
 
-  @Mutation(() => Journey)
+  @Mutation(returns => Journey)
   async addJourney(@Arg("input") input: JourneyInput) {
     return this.service.addJourney(input);
   }
 
-  @Mutation(() => Journey)
+  @Mutation(returns => Journey)
   async updateJourney(
     @Arg("id") id: string,
     @Arg("input") input: JourneyInput
@@ -32,7 +32,7 @@ export default class JourneyResolver {
     return this.service.updateJourney(id, input);
   }
 
-  @Mutation(() => String)
+  @Mutation(returns => String)
   async deleteJourney(@Arg("id") id: string) {
     return this.service.deleteJourney(id);
   }
