@@ -1,5 +1,5 @@
-import { Journeys } from '../schema';
-import { JourneyInput } from '../schema/journey.schema';
+import { Journeys } from "../entities";
+import { JourneyInput } from "../resolvers/types/journey-input";
 
 export default class JourneyService {
   async findAll() {

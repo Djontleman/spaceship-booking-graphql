@@ -1,5 +1,5 @@
-import { SpaceshipModels, Spaceships } from '../schema';
-import { SpaceshipInput, UpdateSpaceshipInput } from '../schema/spaceship.schema';
+import { Spaceships, SpaceshipModels } from "../entities";
+import { SpaceshipInput, UpdateSpaceshipInput } from "../resolvers/types/spaceship-input";
 
 export default class SpaceshipService {
   async findAll() {

@@ -1,5 +1,5 @@
-import { Flights, Journeys } from '../schema';
-import { FlightInput, UpdateFlightInput } from '../schema/flight.schema';
+import { Flights, Journeys } from "../entities";
+import { FlightInput, UpdateFlightInput } from "../resolvers/types/flight-input";
 
 export default class FlightService {
   async findAll() {

@@ -1,9 +1,9 @@
 import { getModelForClass } from "@typegoose/typegoose";
 
-import { SpaceshipModel } from "./spaceshipModel.schema";
-import { Spaceship } from "./spaceship.schema";
-import { Journey } from "./journey.schema";
-import { Flight } from "./flight.schema";
+import { SpaceshipModel } from "./spaceshipModel";
+import { Spaceship } from "./spaceship";
+import { Journey } from "./journey";
+import { Flight } from "./flight";
 
 // construct models with typegoose
 export const SpaceshipModels = getModelForClass(SpaceshipModel); 

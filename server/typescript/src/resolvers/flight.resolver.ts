@@ -1,6 +1,7 @@
 import { Resolver, Query, Mutation, Arg } from 'type-graphql';
 
-import { Flight, FlightInput, UpdateFlightInput } from '../schema/flight.schema';
+import { Flight } from '../entities/flight';
+import { FlightInput, UpdateFlightInput } from './types/flight-input';
 import FlightService from '../service/flight.service';
 
 @Resolver(of => Flight) // type-graphql resolver

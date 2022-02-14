@@ -1,6 +1,7 @@
 import { Resolver, Query, Mutation, Arg } from 'type-graphql';
 
-import { Spaceship, SpaceshipInput } from '../schema/spaceship.schema';
+import { Spaceship } from '../entities/spaceship';
+import { SpaceshipInput } from './types/spaceship-input';
 import SpaceshipService from '../service/spaceship.service';
 
 @Resolver(of => Spaceship) // type-graphql resolver
