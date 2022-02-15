@@ -1,18 +1,23 @@
-import { Flights, Journeys } from "../entities";
+import { Flights, Journeys, Spaceships } from "../entities";
 import { FlightInput, UpdateFlightInput } from "../resolvers/types/flight-input";
 
 export default class FlightService {
   async findAll() {
-    return Flights.find({}).populate({ path: 'journey' });
+    return Flights.find({})
+      .populate({ path: 'journey' })
+      .populate({ path: 'spaceship', populate: { path: 'model' }});
   }
 
   async findById(id: string) {
-    return Flights.findById(id).populate({ path: 'journey' });
+    return Flights.findById(id)
+      .populate({ path: 'journey' })
+      .populate({ path: 'spaceship', populate: { path: 'model' }});
   }
 
   async addFlight(input: FlightInput) {
     const newFlight = new Flights({
       journey: input.journey,
+      spaceship: input.spaceship,
       price: input.price,
     });
 
@@ -21,17 +26,22 @@ export default class FlightService {
     await Promise.all([
       newFlight.save(),
       Journeys.findByIdAndUpdate(newFlight.journey, { "$push": { "flights": { _id: newFlight.id }}}),
+      Spaceships.findByIdAndUpdate(newFlight.spaceship, { "$push": { "flights": { _id: newFlight.id }}}),
     ]);
 
-    return Flights.findById(newFlight.id).populate({ path: 'journey' });
+    return Flights.findById(newFlight.id)
+      .populate({ path: 'journey' })
+      .populate({ path: 'spaceship', populate: { path: 'model' }});
   }
 
-  // todo: this method
-  // * does not currently allow to update journey
+  // todo: this method, update input
+  // * does not currently allow to update journey or spaceship
   async updateFlight(id: string, input: UpdateFlightInput) {
 
     await Flights.findByIdAndUpdate(id, input);
-    return Flights.findById(id).populate({ path: 'journey' });
+    return Flights.findById(id)
+      .populate({ path: 'journey' })
+      .populate({ path: 'spaceship', populate: { path: 'model' }});
     
     // if (input.journey === null) {
     //   await Flights.findByIdAndUpdate(id, input);
@@ -49,6 +59,7 @@ export default class FlightService {
     await Promise.all([
       Flights.findByIdAndDelete(id),
       Journeys.findByIdAndUpdate(flight.journey, { "$pull": { "flights": id }}),
+      Spaceships.findByIdAndUpdate(flight.spaceship, { "$pull": { "flights": id}}),
     ]);
 
     return `Spaceship with ID: ${id} was deleted`;

@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Arg } from 'type-graphql';
 
 import { Spaceship } from '../entities/spaceship';
-import { SpaceshipInput } from './types/spaceship-input';
+import { SpaceshipInput, UpdateSpaceshipInput } from './types/spaceship-input';
 import SpaceshipService from '../service/spaceship.service';
 
 @Resolver(of => Spaceship) // type-graphql resolver
@@ -28,7 +28,7 @@ export default class SpaceshipResolver {
   @Mutation(returns => Spaceship)
   async updateSpaceship(
     @Arg("id") id: string,
-    @Arg("input") input: SpaceshipInput
+    @Arg("input") input: UpdateSpaceshipInput
   ) {
     return this.service.updateSpaceship(id, input);
   }

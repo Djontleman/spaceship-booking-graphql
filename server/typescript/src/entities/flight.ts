@@ -3,6 +3,7 @@ import { ObjectType, Field, ID} from "type-graphql";
 
 import { Journey } from "./journey";
 import { Ref } from "../types";
+import { Spaceship } from "./spaceship";
 
 @ObjectType() 
 export class Flight {
@@ -13,10 +14,9 @@ export class Flight {
   @Property({ ref: () => Journey })
   journey: Ref<Journey>
 
-  // * not implemented yet
-  // @Field(type => Spaceship)
-  // @prop({ ref: () => Spaceship })
-  // spaceship: Ref<Spaceship>;
+  @Field(type => Spaceship)
+  @Property({ ref: () => Spaceship })
+  spaceship: Ref<Spaceship>;
 
   @Field()
   @Property()

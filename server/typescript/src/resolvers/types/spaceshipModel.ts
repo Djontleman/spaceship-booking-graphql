@@ -4,14 +4,14 @@ import { SpaceshipModel } from "../../entities/spaceshipModel";
 
 @InputType()
 export class SpaceshipModelInput implements Partial<SpaceshipModel>{
-  @Field()
-  make: string;
+  @Field({ nullable: true })
+  make?: string;
 
-  @Field()
-  name: string;
+  @Field({ nullable: true })
+  name?: string;
 
-  @Field(type => Int)
-  capacity: number;
+  @Field(type => Int, { nullable: true })
+  capacity?: number;
 
   // * cannot update spaceships with this input
 //   @Field(type => ID, { nullable: true })

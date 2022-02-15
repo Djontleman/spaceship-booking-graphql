@@ -3,11 +3,13 @@ import { SpaceshipModelInput } from "../resolvers/types/spaceshipModel";
 
 export default class SpaceshipModelService {
   async findAll() {
-    return SpaceshipModels.find({}).populate({ path: 'spaceships' });
+    return SpaceshipModels.find({})
+      .populate({ path: 'spaceships', populate: { path: 'flights', populate: { path: 'journey' }}});
   }
 
   async findById(id: string) {
-    return SpaceshipModels.findById(id).populate({ path: 'spaceships' });
+    return SpaceshipModels.findById(id)
+      .populate({ path: 'spaceships', populate: { path: 'flights', populate: { path: 'journey' }}});
   }
 
   async addModel(input: SpaceshipModelInput) {
@@ -20,13 +22,14 @@ export default class SpaceshipModelService {
     newSpaceshipModel.id = newSpaceshipModel._id;
 
     await newSpaceshipModel.save();
-    return SpaceshipModels.findById(newSpaceshipModel.id).populate({ path: 'spaceships' });
+    return SpaceshipModels.findById(newSpaceshipModel.id);
   }
 
   // todo: update this mutation
   async updateModel(id: string, input: SpaceshipModelInput) {
-    const updatedModel = await SpaceshipModels.findByIdAndUpdate(id, input, { new: true });
-    return updatedModel;
+    await SpaceshipModels.findByIdAndUpdate(id, input, { new: true });
+    return SpaceshipModels.findById(id)
+      .populate({ path: 'spaceships', populate: { path: 'flights', populate: { path: 'journey' }}});
   }
 
   async deleteModel(id: string) {

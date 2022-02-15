@@ -3,11 +3,13 @@ import { JourneyInput } from "../resolvers/types/journey-input";
 
 export default class JourneyService {
   async findAll() {
-    return Journeys.find({}).populate({ path: 'flights' });
+    return Journeys.find({})
+      .populate({ path: 'flights', populate: { path: 'spaceship', populate: { path: 'model' }}});
   }
 
   async findById(id: string) {
-    return Journeys.findById(id).populate({ path: 'flights' });
+    return Journeys.findById(id)
+      .populate({ path: 'flights', populate: { path: 'spaceship', populate: { path: 'model' }}});
   }
 
   async addJourney(input: JourneyInput) {
@@ -25,7 +27,8 @@ export default class JourneyService {
   // * cannot alter flights with this
   async updateJourney(id: string, input: JourneyInput) {
     await Journeys.findByIdAndUpdate(id, input, { new: true });
-    return Journeys.findById(id).populate({ path: 'flights' });
+    return Journeys.findById(id)
+      .populate({ path: 'flights', populate: { path: 'spaceship', populate: { path: 'model' }}});
   }
 
   async deleteJourney(id: string) {
