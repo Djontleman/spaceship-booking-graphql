@@ -12,7 +12,7 @@ const MONGO_DB_URL = 'mongodb://localhost/spaceshipBookingDB';
 async function bootstrap() {
   try {
     // connect to MongoDb database
-    await connect(MONGO_DB_URL);
+    await connect(MONGO_DB_URL); // ? potentially use datasources
     console.log("Connected to Database");
     
     // build schema using resolvers
