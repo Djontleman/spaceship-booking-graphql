@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from "type-graphql";
 
 import { Spaceship } from "../../entities/spaceship";
-import { SpaceshipModel } from "../../entities/spaceshipModel";
+import { SpaceshipModel } from "../../entities/spaceship-model";
 import { Ref } from "../../types";
 
 @InputType()

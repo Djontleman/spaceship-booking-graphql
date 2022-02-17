@@ -1,7 +1,7 @@
 import { prop as Property } from "@typegoose/typegoose";
 import { ObjectType, Field, ID } from "type-graphql";
 
-import { SpaceshipModel } from "./spaceshipModel";
+import { SpaceshipModel } from "./spaceship-model";
 import { Ref } from "../types";
 import { Flight } from "./flight";
 

@@ -1,9 +1,21 @@
 import { Field, Int, InputType } from "type-graphql";
 
-import { SpaceshipModel } from "../../entities/spaceshipModel";
+import { SpaceshipModel } from "../../entities/spaceship-model";
 
 @InputType()
 export class SpaceshipModelInput implements Partial<SpaceshipModel>{
+  @Field()
+  make: string;
+
+  @Field()
+  name: string;
+
+  @Field(type => Int)
+  capacity: number;
+}
+
+@InputType()
+export class UpdateSpaceshipModelInput implements Partial<SpaceshipModelInput> {
   @Field({ nullable: true })
   make?: string;
 

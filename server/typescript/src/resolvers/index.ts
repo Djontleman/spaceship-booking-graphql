@@ -1,4 +1,4 @@
-import SpaceshipModelResolver from './spaceshipModel.resolver';
+import SpaceshipModelResolver from './spaceship-model.resolver';
 import SpaceshipResolver from './spaceship.resolver';
 import JourneyResolver from './journey.resolver';
 import FlightResolver from './flight.resolver';

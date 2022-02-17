@@ -1,5 +1,5 @@
 import { SpaceshipModels } from "../entities";
-import { SpaceshipModelInput } from "../resolvers/types/spaceshipModel";
+import { SpaceshipModelInput, UpdateSpaceshipModelInput } from "../resolvers/types/spaceship-model-input";
 
 export default class SpaceshipModelService {
   async findAll() {
@@ -25,8 +25,7 @@ export default class SpaceshipModelService {
     return SpaceshipModels.findById(newSpaceshipModel.id);
   }
 
-  // todo: update this mutation
-  async updateModel(id: string, input: SpaceshipModelInput) {
+  async updateModel(id: string, input: UpdateSpaceshipModelInput) {
     await SpaceshipModels.findByIdAndUpdate(id, input, { new: true });
     return SpaceshipModels.findById(id)
       .populate({ path: 'spaceships', populate: { path: 'flights', populate: { path: 'journey' }}});

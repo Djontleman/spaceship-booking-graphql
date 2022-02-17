@@ -1,6 +1,6 @@
 import { getModelForClass } from "@typegoose/typegoose";
 
-import { SpaceshipModel } from "./spaceshipModel";
+import { SpaceshipModel } from "./spaceship-model";
 import { Spaceship } from "./spaceship";
 import { Journey } from "./journey";
 import { Flight } from "./flight";
