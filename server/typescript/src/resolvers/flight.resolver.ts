@@ -4,8 +4,6 @@ import { Flight } from '../models/flight';
 import { FlightInput, UpdateFlightInput } from './types/flight-input';
 import FlightService from '../service/flight.service';
 
-import { Flights } from '../models'; // part of field resolver test
-
 @Resolver(of => Flight) // type-graphql resolver
 export default class FlightResolver {
   constructor(private service: FlightService) {
@@ -14,12 +12,13 @@ export default class FlightResolver {
 
   @Query(returns => [Flight])
   async allFlights() {
-    return this.service.findAll();
+    const flights = await this.service.findAll();
+    return flights.map(flight => { return { id: flight.id }});
   }
 
   @Query(returns => Flight)
-  async flight(@Arg("id") id: string) {
-    return this.service.findById(id);
+  async flight(@Arg("id") id: string) { 
+    return { id }; 
   }
 
   @Mutation(returns => Flight)
@@ -40,14 +39,24 @@ export default class FlightResolver {
     return this.service.deleteFlight(id);
   }
   
-  // * query and field resolver testing
-  @Query(returns => [Flight])
-  async getFlightsTest() {
-    return Flights.find({});
+  @FieldResolver()
+  async id(@Root() { id }: Flight) {
+    return id;
   }
 
   @FieldResolver()
-  async journey(@Root() { _doc: flight }: Flight) {
-    return this.service.getJourney(flight.journey);
+  async journey(@Root() { id }: Flight) {
+    return this.service.getJourneyByFlightId(id);
+  }
+
+  @FieldResolver()
+  async spaceship(@Root() { id }: Flight) {
+    return this.service.getSpaceshipByFlightId(id);
+  }
+
+  @FieldResolver()
+  async price(@Root() { id }: Flight) {
+    const { price } = await this.service.findById(id);
+    return price;
   }
 }

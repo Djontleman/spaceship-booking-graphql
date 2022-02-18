@@ -3,15 +3,11 @@ import { FlightInput, UpdateFlightInput } from "../resolvers/types/flight-input"
 
 export default class FlightService {
   async findAll() {
-    return Flights.find({})
-      .populate({ path: 'journey' })
-      .populate({ path: 'spaceship', populate: { path: 'model' }});
+    return Flights.find({});
   }
 
   async findById(id: string) {
-    return Flights.findById(id)
-      .populate({ path: 'journey' })
-      .populate({ path: 'spaceship', populate: { path: 'model' }});
+    return Flights.findById(id);
   }
 
   async addFlight(input: FlightInput) {
@@ -65,8 +61,12 @@ export default class FlightService {
     return `Spaceship with ID: ${id} was deleted`;
   }
 
-  // * function for test field resolver
-  async getJourney(journeyId: string) {
-    return Journeys.findById(journeyId);
+  // * functions field resolvers
+  async getJourneyByFlightId(flightId: string) {
+    return Journeys.findOne({ "flights": { "$in": flightId }});
+  }
+
+  async getSpaceshipByFlightId(flightId: string) {
+    return Spaceships.findOne({ "flights": { "$in": flightId }});
   }
 }
