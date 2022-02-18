@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Arg } from 'type-graphql';
 
-import { Flight } from '../entities/flight';
+import { Flight } from '../models/flight';
 import { FlightInput, UpdateFlightInput } from './types/flight-input';
 import FlightService from '../service/flight.service';
 

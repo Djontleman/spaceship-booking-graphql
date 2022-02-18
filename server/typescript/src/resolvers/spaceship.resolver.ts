@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Arg } from 'type-graphql';
 
-import { Spaceship } from '../entities/spaceship';
+import { Spaceship } from '../models/spaceship';
 import { SpaceshipInput, UpdateSpaceshipInput } from './types/spaceship-input';
 import SpaceshipService from '../service/spaceship.service';
 

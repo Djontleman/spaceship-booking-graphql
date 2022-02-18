@@ -1,4 +1,4 @@
-import { Flights, Journeys, Spaceships } from "../entities";
+import { Flights, Journeys, Spaceships } from "../models";
 import { FlightInput, UpdateFlightInput } from "../resolvers/types/flight-input";
 
 export default class FlightService {
@@ -59,7 +59,7 @@ export default class FlightService {
     await Promise.all([
       Flights.findByIdAndDelete(id),
       Journeys.findByIdAndUpdate(flight.journey, { "$pull": { "flights": id }}),
-      Spaceships.findByIdAndUpdate(flight.spaceship, { "$pull": { "flights": id}}),
+      Spaceships.findByIdAndUpdate(flight.spaceship, { "$pull": { "flights": id }}),
     ]);
 
     return `Spaceship with ID: ${id} was deleted`;

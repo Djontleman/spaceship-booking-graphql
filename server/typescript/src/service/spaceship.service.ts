@@ -1,4 +1,4 @@
-import { Spaceships, SpaceshipModels } from "../entities";
+import { Spaceships, SpaceshipModels } from "../models";
 import { SpaceshipInput, UpdateSpaceshipInput } from "../resolvers/types/spaceship-input";
 
 export default class SpaceshipService {

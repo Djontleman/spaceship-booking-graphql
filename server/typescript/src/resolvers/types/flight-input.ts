@@ -1,8 +1,8 @@
 import { Field, ID, InputType } from "type-graphql";
 
-import { Flight } from "../../entities/flight";
-import { Journey } from "../../entities/journey";
-import { Spaceship } from "../../entities/spaceship";
+import { Flight } from "../../models/flight";
+import { Journey } from "../../models/journey";
+import { Spaceship } from "../../models/spaceship";
 import { Ref } from "../../types";
 
 

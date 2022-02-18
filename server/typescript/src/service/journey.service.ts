@@ -1,4 +1,4 @@
-import { Journeys } from "../entities";
+import { Journeys } from "../models";
 import { JourneyInput } from "../resolvers/types/journey-input";
 
 export default class JourneyService {

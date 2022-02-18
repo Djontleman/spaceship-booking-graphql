@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Arg } from 'type-graphql';
 
-import { Journey } from '../entities/journey';
+import { Journey } from '../models/journey';
 import { JourneyInput } from './types/journey-input';
 import JourneyService from '../service/journey.service';
 
