@@ -24,4 +24,7 @@ export class SpaceshipModel {
   @Field(type => [Spaceship])
   @Property({ ref: () => Spaceship})
   spaceships: Ref<Spaceship>[];
+
+  // todo: potentially implement better solution from typegraphql example
+  _doc: any;
 }

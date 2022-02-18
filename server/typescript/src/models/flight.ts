@@ -21,4 +21,7 @@ export class Flight {
   @Field()
   @Property()
   price: number;
+
+  // todo: potentially implement better solution from typegraphql example
+  _doc: any;
 }

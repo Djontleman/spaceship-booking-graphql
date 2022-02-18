@@ -64,4 +64,9 @@ export default class FlightService {
 
     return `Spaceship with ID: ${id} was deleted`;
   }
+
+  // * function for test field resolver
+  async getJourney(journeyId: string) {
+    return Journeys.findById(journeyId);
+  }
 }

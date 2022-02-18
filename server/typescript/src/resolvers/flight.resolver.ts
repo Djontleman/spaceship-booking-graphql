@@ -1,8 +1,10 @@
-import { Resolver, Query, Mutation, Arg } from 'type-graphql';
+import { Resolver, Query, Mutation, Arg, FieldResolver, Root } from 'type-graphql';
 
 import { Flight } from '../models/flight';
 import { FlightInput, UpdateFlightInput } from './types/flight-input';
 import FlightService from '../service/flight.service';
+
+import { Flights } from '../models'; // part of field resolver test
 
 @Resolver(of => Flight) // type-graphql resolver
 export default class FlightResolver {
@@ -36,5 +38,16 @@ export default class FlightResolver {
   @Mutation(returns => String)
   async deleteFlight(@Arg("id") id: string) {
     return this.service.deleteFlight(id);
+  }
+  
+  // * query and field resolver testing
+  @Query(returns => [Flight])
+  async getFlightsTest() {
+    return Flights.find({});
+  }
+
+  @FieldResolver()
+  async journey(@Root() { _doc: flight }: Flight) {
+    return this.service.getJourney(flight.journey);
   }
 }
