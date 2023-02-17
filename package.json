@@ -2,10 +2,6 @@
   "name": "spaceship-booking-graphql",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -18,8 +14,10 @@
     "turbo": "latest"
   },
   "engines": {
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": ">=7.16",
     "node": ">=14.0.0"
   },
-  "dependencies": {},
-  "packageManager": "yarn@1.22.19"
+  "dependencies": {}
 }

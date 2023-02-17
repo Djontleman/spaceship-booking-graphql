@@ -1,0 +1,7 @@
+packages:
+  - apps/server-gql
+  - apps/server-gql-dep
+  - apps/web
+  - packages/eslint-config-custom
+  - packages/tsconfig
+  - packages/ui
