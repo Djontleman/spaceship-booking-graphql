@@ -11,6 +11,18 @@
     },
     "dev": {
       "cache": false
+    },
+    "generate": {
+      "cache": false
+    },
+    "seed": {
+      "cache": false
+    },
+    "studio": {
+      "cache": false
+    },
+    "db-push": {
+      "cache": false
     }
   }
 }
