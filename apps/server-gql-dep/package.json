@@ -1,5 +1,5 @@
 {
-  "name": "type-graphql",
+  "name": "server-gql-dep",
   "version": "1.0.0",
   "description": "spaceship booking API using typescript",
   "private": true,
